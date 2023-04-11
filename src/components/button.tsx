@@ -7,12 +7,14 @@ function Button({
   danger = false,
   className,
   onClick,
+  type =  "button",
 }: {
   text: string;
   primary?: boolean;
   danger?: boolean;
   className?: string;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  type?: "button" | "submit" | "reset";
 }) {
   return (
     <button
@@ -24,6 +26,7 @@ function Button({
         className && `${className}`
       )}
       onClick={onClick}
+      type={type}
     >
       {text}
     </button>
