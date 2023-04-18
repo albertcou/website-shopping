@@ -6,23 +6,27 @@ import { RootState } from "../GlobalRedux/store";
 import { cartItems } from "@/types/type";
 import Image from "next/image";
 import { CART_ADD_ITEM, CART_REMOVE_ITEM } from "../GlobalRedux/carts";
+import { toast } from "react-hot-toast";
 
 function CartItem({ ...props }: cartItems) {
   const dispatch = useDispatch();
   const [TotalCart, setTotalCart] = useState<number>(props.quantity);
 
-  useEffect(()=>{
-    dispatch(CART_ADD_ITEM({
-      ...props,
-      quantity: TotalCart
-    }))
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[TotalCart])
+  useEffect(() => {
+    dispatch(
+      CART_ADD_ITEM({
+        ...props,
+        quantity: TotalCart,
+      })
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [TotalCart]);
 
   const removeItemHandler = (item: cartItems) => {
     dispatch(CART_REMOVE_ITEM(item));
+    toast.error(`🛒 Berhasil menghapus ${item.name} 😒`);
   };
-  
+
   return (
     <div className="flex">
       <div className="flex">
@@ -59,7 +63,7 @@ function CartItem({ ...props }: cartItems) {
 
 function Cart() {
   const { cartItems } = useSelector((state: RootState) => state.Carts.cart);
-  
+
   return (
     <div className="w-full min-h-[90vh]">
       <div className="flex flex-col items-center">
@@ -80,7 +84,12 @@ function Cart() {
                   />
                 );
               })}
-              <h2 className="text-2xl font-bold text-center">SubTotal: Rp.{cartItems.reduce((acc, item) => {return acc + item.quantity * item.price}, 0)}</h2>
+              <h2 className="text-2xl font-bold text-center">
+                SubTotal: Rp.
+                {cartItems.reduce((acc, item) => {
+                  return acc + item.quantity * item.price;
+                }, 0)}
+              </h2>
             </>
           ) : (
             <h2 className="text-2xl font-semibold">Tidak ada Belajaan 😒</h2>

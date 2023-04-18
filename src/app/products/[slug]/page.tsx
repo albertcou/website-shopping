@@ -6,9 +6,8 @@ import React, { useState } from "react";
 import type { RootState } from "@/app/GlobalRedux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { CART_ADD_ITEM } from "@/app/GlobalRedux/carts";
-import Image from "next/image";
 import { Product } from "@/types/type";
-import dynamic from "next/dynamic";
+import { toast } from "react-hot-toast";
 
 function SideImages() {
   return <div className="w-28 h-28 bg-tertiary rounded-2xl"></div>;
@@ -36,6 +35,7 @@ function Page({ params }: { params: { slug: string } }) {
   const product = data.products.find((x) => x.slug === params.slug);
   const item = useSelector((state: RootState) => state.Carts.cart);
   const dispatch = useDispatch();
+  
   if (!product) return <div>Product Not Found!!!</div>;
   const recommend = data.products.filter(
     (obj, _) =>
@@ -51,6 +51,9 @@ function Page({ params }: { params: { slug: string } }) {
         quantity,
       })
     );
+    toast(`Anda Berhasil Menambah ${product.name} sebanyak ${TotalCart} 😄`,{
+      icon: '🛒'
+    });
   };
 
   return (
@@ -93,4 +96,4 @@ function Page({ params }: { params: { slug: string } }) {
   );
 }
 
-export default dynamic(()=> Promise.resolve(Page),{ssr:false});
+export default Page;

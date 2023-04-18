@@ -1,8 +1,9 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
-import NextAuth from "next-auth";
+import NextAuth, { Session } from "next-auth";
 import prisma from "@/libs/prismadb";
 import bcrypt from "bcrypt";
+import { JWT } from "next-auth/jwt";
 
 const handler = NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -18,17 +19,25 @@ const handler = NextAuth({
           throw new Error("Invalid Credentials");
         }
 
-        const user = await prisma.user.findUnique({
+        let user = await prisma.user.findUnique({
           where: {
             email: credentials.email,
           },
         });
 
+        if (!user) {
+          user = await prisma.user.findUnique({
+            where: {
+              username: credentials.email,
+            },
+          });
+        }
+
         if (!user || !user?.password) {
           throw new Error("Invalid Credentials");
         }
 
-        const isCorrectPassword = bcrypt.compare(
+        const isCorrectPassword = await bcrypt.compare(
           credentials.password,
           user.password
         );
@@ -41,8 +50,39 @@ const handler = NextAuth({
       },
     }),
   ],
+  callbacks: {
+    async jwt({
+      token,
+      user,
+      account,
+    }: {
+      token: JWT;
+      user: any;
+      account: any;
+    }) {
+      if (account && user) {
+        const { username, isAdmin }: any = await prisma.user.findUnique({
+          where: {
+            email: user.email,
+          },
+        });
+        token.username = username;
+        token.isAdmin = isAdmin;
+      }
+      return token;
+    },
+    async session({ session, token }: { session: Session; token: JWT }) {
+      session.user = {
+        ...token,
+        email: token.email as string,
+        username: token.username as string,
+        isAdmin: token.isAdmin as boolean,
+      };
+      return session;
+    },
+  },
   pages: {
-    signIn: "/login",
+    signIn: "/auth/login",
   },
   debug: process.env.NODE_ENV !== "development",
   session: {

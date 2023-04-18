@@ -1,5 +1,7 @@
+'use client'
 import React from "react";
 import { clsx } from "clsx";
+import { toast } from "react-hot-toast";
 
 function Button({
   text,
@@ -7,7 +9,8 @@ function Button({
   danger = false,
   className,
   onClick,
-  type =  "button",
+  type = "button",
+  disable = false,
 }: {
   text: string;
   primary?: boolean;
@@ -15,6 +18,7 @@ function Button({
   className?: string;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   type?: "button" | "submit" | "reset";
+  disable?: boolean;
 }) {
   return (
     <button
@@ -22,11 +26,15 @@ function Button({
         "text-center text-lg font-semibold w-36 py-2 rounded-full shadow-md",
         primary
           ? "bg-primary text-white"
-          : danger ? "border border-danger text-danger" : "border border-primary text-primary",
+          : danger
+          ? "border border-danger text-danger"
+          : "border border-primary text-primary",
+        disable && "bg-slate-400",
         className && `${className}`
       )}
       onClick={onClick}
       type={type}
+      disabled={disable}
     >
       {text}
     </button>
@@ -44,9 +52,13 @@ function Jumlah({
     switch (type) {
       case "add":
         value > 0 && setTotalCart(value + 1);
+        toast.success(`🛒 Berhasil Menambah 1 Item 😄`);
         break;
       case "remove":
-        value > 1 && setTotalCart(value - 1);
+        if (value > 1) {
+          setTotalCart(value - 1);
+          toast.error(`🛒 Berhasil Mengurangi 1 Item 😒`);
+        }
         break;
       default:
         break;

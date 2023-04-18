@@ -32,10 +32,10 @@ function Products({ categories, name, price, images }: I_Products) {
         alt={"produk"}
         width={256}
         height={256}
-        className=" bg-tertiary rounded-3xl hover:shadow-lg hover:transition-all hover:-translate-y-1 duration-200"
+        className="duration-200  bg-tertiary rounded-3xl hover:shadow-lg hover:transition-all hover:-translate-y-1"
       />
       <h1 className="font-semibold text-secondary">{categories}</h1>
-      <h1 className="font-bold text-lg">{name}</h1>
+      <h1 className="text-lg font-bold">{name}</h1>
       <p className="text-lg">{formatRupiah(price.toString(), "Rp. ")}</p>
     </div>
   );
@@ -56,8 +56,8 @@ function ProductsDetails({
         height={415}
         className=" bg-tertiary rounded-3xl"
       />
-      <div className="flex flex-col capitalize gap-y-3 my-auto w-full text-left">
-        <h1 className="font-bold text-5xl">{props.name}</h1>
+      <div className="flex flex-col w-full my-auto text-left capitalize gap-y-3">
+        <h1 className="text-5xl font-bold">{props.name}</h1>
         <div>
           <h2 className="font-semibold text-secondary">Categories:</h2>
           <p>{props.categories}</p>
@@ -68,7 +68,7 @@ function ProductsDetails({
             {formatRupiah(props.price.toString(), "Rp. ")}
           </p>
         </div>
-        <div className="flex space-x-3 mt-3">
+        <div className="flex mt-3 space-x-3">
           <h2 className="font-semibold text-secondary">Stok:</h2>
           <p className="font-bold">120</p>
         </div>

@@ -2,6 +2,7 @@ import Navbar from "@/components/navbar";
 import "./globals.css";
 import Providers from "./GlobalRedux/provider";
 import AuthProvider from "@/components/authprovider";
+import ToastContainers from "@/components/toastcontainers";
 
 export const metadata = {
   title: "Create Next App",
@@ -18,6 +19,7 @@ export default function RootLayout({ children }: IProps) {
       <body className="bg-[#F6F6F6]">
           <AuthProvider>
             <Providers>
+              <ToastContainers />
               <Navbar />
               {children}
             </Providers>

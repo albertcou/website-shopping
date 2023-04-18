@@ -1,6 +1,5 @@
 "use client";
 import Button from "@/components/button";
-import dynamic from "next/dynamic";
 import { forwardRef, useRef } from "react";
 
 interface Props {
@@ -42,4 +41,4 @@ function FormLogin({ submitHandler }: { submitHandler: any }) {
   );
 }
 
-export default dynamic(() => Promise.resolve(FormLogin), { ssr: false });
+export default FormLogin;
